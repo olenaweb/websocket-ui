@@ -3,29 +3,42 @@
 > By default WebSocket client tries to connect to the 3000 port.
 
 ## Installation
-1. Clone/download repo
-2. `npm install`
+ `git clone https://github.com/olenaweb/websocket-ui.git`
+   `git checkout -b develop origin/develop`
+   `npm install`
+
 
 ## Usage
-**Development**
+1.**Development**
 
-`npm run start:dev`
+running TypeScript files directly from sources using tsx:
+`npm run start:dev` -> `npx tsx ./index.ts`
+
+launch with automatic reboot when files change:
+`npm run start:dev:watch` -> `nodemon --exec "npx tsx ./index.ts"`
 
 * App served @ `http://localhost:8181` with nodemon
 
-**Production**
+2.**Production**
 
-`npm run start`
+`npm run start` -> `"start": "npm run build && node ./dist/index.js"`
 
 * App served @ `http://localhost:8181` without nodemon
 
 ---
 
-**All commands**
+3.**All commands**
 
 Command | Description
 --- | ---
-`npm run start:dev` | App served @ `http://localhost:8181` with nodemon
-`npm run start` | App served @ `http://localhost:8181` without nodemon
+`npm run start:dev` | App served @ `http://localhost:8181` without nodemon
+`npm run start:dev:watch` | App served @ `http://localhost:8181` with nodemon
+`npm run start` | App served @ `http://localhost:8181` without nodemon in Production
+
+
+#### Code Checks
+npm run lint         # Code style check
+npm run type-check   # TypeScript type check
+npm run fix          # Auto-fix errors
 
 **Note**: replace `npm` with `yarn` in `package.json` if you use yarn.
