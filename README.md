@@ -1,11 +1,13 @@
-# RSSchool NodeJS websocket task template
+# RSSchool NodeJS websocket task
 > Static http server and base task packages. 
 > By default WebSocket client tries to connect to the 3000 port.
 
 ## Installation
- `git clone https://github.com/olenaweb/websocket-ui.git`
-   `git checkout -b develop origin/develop`
-   `npm install`
+`git clone https://github.com/olenaweb/websocket-ui.git`
+
+`git checkout -b develop origin/develop`
+
+`npm install`
 
 
 ## Usage
@@ -38,7 +40,9 @@ Command | Description
 
 #### Code Checks
 npm run lint         # Code style check
+
 npm run type-check   # TypeScript type check
+
 npm run fix          # Auto-fix errors
 
 **Note**: replace `npm` with `yarn` in `package.json` if you use yarn.
