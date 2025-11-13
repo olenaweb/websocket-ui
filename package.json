@@ -8,7 +8,7 @@
     "build": "npx tsc",
     "start": "npm run build && node ./dist/index.js",
     "start:dev": "npx tsx ./index.ts",
-    "start:dev:watch": "nodemon --exec \"npx tsx ./index.ts\"",
+    "start:watch": "nodemon --exec \"npx tsx ./index.ts\"",
     "lint": "npx eslint src/**/*.ts index.ts --fix",
     "fix": "npx prettier '**/*.{ts,css,html}' --write && npx eslint src/**/*.ts index.ts --fix",
     "type-check": "npx tsc --noEmit",
@@ -37,6 +37,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "dotenv": "^17.2.3",
     "uuid": "^13.0.0",
     "ws": "^8.18.3"
   }
