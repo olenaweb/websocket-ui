@@ -40,7 +40,7 @@ export interface WSMessage {
   id: number;
 }
 
-// Типы для различных команд
+//  Types for message data
 export interface RegistrationData {
   name: string;
   password: string;
@@ -55,6 +55,10 @@ export interface RegistrationResponse {
 
 export interface AddUserToRoomData {
   indexRoom: number;
+}
+
+export interface CreateRoomData {
+  // Empty string according to specification
 }
 
 export interface CreateGameData {
@@ -112,8 +116,30 @@ export interface WinnerData {
   wins: number;
 }
 
+// Array types for responses
+export type UpdateRoomResponse = RoomData[];
+export type UpdateWinnersResponse = WinnerData[];
+
+// Union type for all possible message data types
+export type MessageDataType =
+  | RegistrationData
+  | RegistrationResponse
+  | CreateRoomData
+  | AddUserToRoomData
+  | CreateGameData
+  | AddShipsData
+  | StartGameData
+  | AttackData
+  | RandomAttackData
+  | AttackResponse
+  | TurnData
+  | FinishData
+  | UpdateRoomResponse
+  | UpdateWinnersResponse
+  | string; // For empty data
+
 // General type for sent messages
-export interface WSResponse<T = unknown> {
+export interface WSResponse<T = MessageDataType> {
   type: string;
   data: T;
   id: number;
