@@ -1,5 +1,5 @@
-import { WebSocket } from 'ws';
-import { Player, Room, GameState, GamePlayer } from '../types/types';
+import { WebSocket } from "ws";
+import { Player, Room, GameState, GamePlayer } from "../types/types";
 
 export class GameDatabase {
   private players: Map<string, Player> = new Map();
@@ -18,7 +18,7 @@ export class GameDatabase {
       if (existingPlayer.password === password) {
         return existingPlayer;
       } else {
-        throw new Error('Wrong password');
+        throw new Error("Wrong password");
       }
     }
 
@@ -26,7 +26,7 @@ export class GameDatabase {
       name,
       password,
       index: this.nextPlayerId++,
-      wins: 0
+      wins: 0,
     };
 
     this.players.set(name, newPlayer);
@@ -61,7 +61,7 @@ export class GameDatabase {
   createRoom(player: Player): Room {
     const room: Room = {
       roomId: this.nextRoomId++,
-      players: [player]
+      players: [player],
     };
 
     this.rooms.set(room.roomId, room);
@@ -73,7 +73,9 @@ export class GameDatabase {
   }
 
   getAvailableRooms(): Room[] {
-    return Array.from(this.rooms.values()).filter(room => room.players.length === 1);
+    return Array.from(this.rooms.values()).filter(
+      (room) => room.players.length === 1
+    );
   }
 
   addPlayerToRoom(roomId: number, player: Player): Room | null {
@@ -94,13 +96,15 @@ export class GameDatabase {
   createGame(room: Room): GameState {
     const game: GameState = {
       gameId: this.nextGameId++,
-      players: room.players.map(p => ({
+      players: room.players.map((p) => ({
         index: p.index,
         ships: [],
-        board: Array(10).fill(null).map(() => Array(10).fill('empty'))
+        board: Array(10)
+          .fill(null)
+          .map(() => Array(10).fill("empty")),
       })),
       currentPlayerIndex: room.players[0].index,
-      isStarted: false
+      isStarted: false,
     };
 
     this.games.set(game.gameId, game);

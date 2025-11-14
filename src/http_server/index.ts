@@ -5,17 +5,17 @@ import * as http from "http";
 function getContentType(filePath: string): string {
   const ext = path.extname(filePath).toLowerCase();
   const mimeTypes: { [key: string]: string } = {
-    '.html': 'text/html',
-    '.js': 'text/javascript',
-    '.css': 'text/css',
-    '.png': 'image/png',
-    '.jpg': 'image/jpeg',
-    '.gif': 'image/gif',
-    '.svg': 'image/svg+xml',
-    '.mp3': 'audio/mpeg',
-    '.mp4': 'video/mp4',
+    ".html": "text/html",
+    ".js": "text/javascript",
+    ".css": "text/css",
+    ".png": "image/png",
+    ".jpg": "image/jpeg",
+    ".gif": "image/gif",
+    ".svg": "image/svg+xml",
+    ".mp3": "audio/mpeg",
+    ".mp4": "video/mp4",
   };
-  return mimeTypes[ext] || 'application/octet-stream';
+  return mimeTypes[ext] || "application/octet-stream";
 }
 
 export const httpServer: http.Server = http.createServer(
@@ -34,7 +34,7 @@ export const httpServer: http.Server = http.createServer(
         }
 
         const contentType = getContentType(file_path);
-        res.writeHead(200, { 'Content-Type': contentType });
+        res.writeHead(200, { "Content-Type": contentType });
         res.end(data);
       }
     );

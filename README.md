@@ -17,15 +17,15 @@ running TypeScript files directly from sources using tsx:
 `npm run start:dev` -> `npx tsx ./index.ts`
 
 launch with automatic reboot when files change:
-`npm run start:dev:watch` -> `nodemon --exec "npx tsx ./index.ts"`
+`npm run start:watch` -> `"nodemon --exec \"npx tsx ./index.ts\""`
 
-* App served @ `http://localhost:8181` with nodemon
+* App served @ `http://localhost:3000` with nodemon
 
 2.**Production**
 
-`npm run start` -> `"start": "npm run build && node ./dist/index.js"`
+`npm run start` -> `"start": "webpack --config webpack.config.cjs && node ./dist/index.cjs"`
 
-* App served @ `http://localhost:8181` without nodemon
+* App served @ `http://localhost:3000` without nodemon
 
 ---
 
@@ -33,9 +33,9 @@ launch with automatic reboot when files change:
 
 Command | Description
 --- | ---
-`npm run start:dev` | App served @ `http://localhost:8181` without nodemon
-`npm run start:dev:watch` | App served @ `http://localhost:8181` with nodemon
-`npm run start` | App served @ `http://localhost:8181` without nodemon in Production
+`npm run start:dev` | App served @ `http://localhost:3000` without nodemon
+`npm run start:watch` | App served @ `http://localhost:3000` with nodemon
+`npm run start` | App served @ `http://localhost:3000` without nodemon in Production
 
 
 #### Code Checks

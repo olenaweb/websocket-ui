@@ -1,4 +1,4 @@
-import { WebSocket } from 'ws';
+import { WebSocket } from "ws";
 
 export interface Player {
   name: string;
@@ -31,7 +31,7 @@ export interface Ship {
   position: { x: number; y: number };
   direction: boolean;
   length: number;
-  type: 'small' | 'medium' | 'large' | 'huge';
+  type: "small" | "medium" | "large" | "huge";
 }
 
 export interface WSMessage {
@@ -92,7 +92,7 @@ export interface RandomAttackData {
 export interface AttackResponse {
   position: { x: number; y: number };
   currentPlayer: number;
-  status: 'miss' | 'killed' | 'shot';
+  status: "miss" | "killed" | "shot";
 }
 
 export interface TurnData {
