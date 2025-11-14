@@ -13,7 +13,8 @@ export function createWebSocketServer(httpServer: Server): WebSocketServer {
   const db = new GameDatabase();
 
   wss.on("connection", (ws: WebSocket) => {
-    console.log("*** New WebSocket connection");
+    const clientCount = wss.clients.size;
+    console.log(`*** New WebSocket connection established (Total clients: ${clientCount})`);
 
     ws.on("message", (message: string) => {
       try {
@@ -24,30 +25,50 @@ export function createWebSocketServer(httpServer: Server): WebSocketServer {
           try {
             parsedMessage.data = JSON.parse(parsedMessage.data);
           } catch (e) {
-            // If not a JSON string, leave as is
+            console.warn("⚠️ Data is not a JSON string, leaving as is" + e);
           }
         }
 
-        console.log(`-> inbound message ${JSON.stringify(parsedMessage)}`);
+        console.log(`🠈 inbound message: ${JSON.stringify(parsedMessage)}`);
         handleMessage(ws, parsedMessage, db, wss);
       } catch (error) {
         console.error("❌ Error parsing message:", error);
         sendError(ws, "Invalid message format");
       }
     });
-    ws.on("close", () => {
-      console.log("❌ WebSocket connection closed");
+    ws.on("close", (code, reason) => {
+      const clientCount = wss.clients.size;
+      console.log(`*** WebSocket connection closed (Code: ${code}, Reason: ${reason || 'No reason'}, Remaining clients: ${clientCount})`);
+
       // Remove connection from database
+      let disconnectedPlayer = null;
       for (const [playerId, connection] of db["playerConnections"]) {
         if (connection === ws) {
+          disconnectedPlayer = db.getPlayerById(playerId);
           db.removePlayerConnection(playerId);
           break;
         }
       }
+
+      if (disconnectedPlayer) {
+        console.log(`*** Player "${disconnectedPlayer.name}" (ID: ${disconnectedPlayer.index}) disconnected`);
+      }
     });
 
     ws.on("error", (error) => {
-      console.error("❌ WebSocket error:", error);
+      console.error("❌ WebSocket error occurred:", error.message);
+
+      let errorPlayer = null;
+      for (const [playerId, connection] of db["playerConnections"]) {
+        if (connection === ws) {
+          errorPlayer = db.getPlayerById(playerId);
+          break;
+        }
+      }
+
+      if (errorPlayer) {
+        console.error(`*** Error for player "${errorPlayer.name}" (ID: ${errorPlayer.index})`);
+      }
     });
   });
 
@@ -64,13 +85,13 @@ function handleMessage(
 
   switch (type) {
     case "reg":
-      handleRegistration(ws, data, db, wss);
+      handleRegistration(ws, data, db);
       break;
     case "create_room":
-      handleCreateRoom(ws, data, db, wss);
+      handleCreateRoom(ws, data, db);
       break;
     case "add_user_to_room":
-      handleAddUserToRoom(ws, data, db, wss);
+      handleAddUserToRoom(ws, data, db);
       break;
     case "add_ships":
       handleAddShips(ws, data, db, wss);

@@ -1,6 +1,6 @@
 import { WebSocket } from "ws";
-import { Player, Room, GameState, GamePlayer } from "../types/types";
-
+import { Player, Room, GameState } from "../types/types";
+// import{GamePlayer}from"../types/types";
 export class GameDatabase {
   private players: Map<string, Player> = new Map();
   private rooms: Map<number, Room> = new Map();

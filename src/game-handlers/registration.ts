@@ -1,4 +1,4 @@
-import { WebSocket, WebSocketServer } from "ws";
+import { WebSocket } from "ws";
 import { GameDatabase } from "../game-db/game-database";
 import {
   sendMessage,
@@ -21,8 +21,7 @@ function isRegistrationData(data: unknown): data is RegistrationData {
 export function handleRegistration(
   ws: WebSocket,
   data: unknown,
-  db: GameDatabase,
-  wss: WebSocketServer
+  db: GameDatabase
 ): void {
   try {
     if (!isRegistrationData(data)) {
@@ -54,8 +53,8 @@ export function handleRegistration(
     console.log(`✅ Player registered: ${name} (ID: ${player.index})`);
 
     // Send updates to all clients
-    broadcastRoomUpdate(db, wss);
-    broadcastWinnersUpdate(db, wss);
+    broadcastRoomUpdate(db);
+    broadcastWinnersUpdate(db);
   } catch (error) {
     const responseData: RegistrationResponse = {
       name: isRegistrationData(data) ? data.name : "unknown",

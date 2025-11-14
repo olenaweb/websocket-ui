@@ -57,9 +57,8 @@ export interface AddUserToRoomData {
   indexRoom: number;
 }
 
-export interface CreateRoomData {
-  // Empty string according to specification
-}
+// Empty data for create_room command (as per specification: data should be "")
+export type CreateRoomData = string;
 
 export interface CreateGameData {
   idGame: number;

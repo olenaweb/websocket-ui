@@ -1,4 +1,4 @@
-import { WebSocket, WebSocketServer } from "ws";
+import { WebSocket } from "ws";
 import { GameDatabase } from "../game-db/game-database";
 import { WSResponse, RoomData, WinnerData } from "../types/types";
 
@@ -22,7 +22,7 @@ export function sendMessage<T = unknown>(
     };
 
     const messageString = JSON.stringify(messageToSend);
-    console.log(`outbound message -> ${messageString}`);
+    console.log(`🠊 outbound message: ${messageString}`);
     ws.send(messageString);
   }
 }
@@ -35,10 +35,7 @@ export function sendError(ws: WebSocket, errorText: string): void {
   });
 }
 
-export function broadcastRoomUpdate(
-  db: GameDatabase,
-  wss: WebSocketServer
-): void {
+export function broadcastRoomUpdate(db: GameDatabase): void {
   const availableRooms: RoomData[] = db.getAvailableRooms().map((room) => ({
     roomId: room.roomId,
     roomUsers: room.players.map((p) => ({
@@ -58,10 +55,7 @@ export function broadcastRoomUpdate(
   });
 }
 
-export function broadcastWinnersUpdate(
-  db: GameDatabase,
-  wss: WebSocketServer
-): void {
+export function broadcastWinnersUpdate(db: GameDatabase): void {
   const winners: WinnerData[] = db
     .getAllPlayers()
     .sort((a, b) => b.wins - a.wins)

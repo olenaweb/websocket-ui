@@ -1,4 +1,4 @@
-import { WebSocket, WebSocketServer } from "ws";
+import { WebSocket } from "ws";
 import { GameDatabase } from "../game-db/game-database";
 import {
   sendMessage,
@@ -19,8 +19,7 @@ function isAddUserToRoomData(data: unknown): data is AddUserToRoomData {
 export function handleCreateRoom(
   ws: WebSocket,
   data: unknown,
-  db: GameDatabase,
-  wss: WebSocketServer
+  db: GameDatabase
 ): void {
   // Find player by WebSocket connection
   const player = db.findPlayerByWebSocket(ws);
@@ -32,14 +31,13 @@ export function handleCreateRoom(
   const room = db.createRoom(player);
   console.log(`Room created: ${room.roomId} by player ${player.name}`);
 
-  broadcastRoomUpdate(db, wss);
+  broadcastRoomUpdate(db);
 }
 
 export function handleAddUserToRoom(
   ws: WebSocket,
   data: unknown,
-  db: GameDatabase,
-  wss: WebSocketServer
+  db: GameDatabase
 ): void {
   const player = db.findPlayerByWebSocket(ws);
   if (!player) {
@@ -86,5 +84,5 @@ export function handleAddUserToRoom(
 
   // Remove room from available
   db.removeRoom(room.roomId);
-  broadcastRoomUpdate(db, wss);
+  broadcastRoomUpdate(db);
 }

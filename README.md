@@ -39,10 +39,10 @@ Command | Description
 
 
 #### Code Checks
-npm run lint         # Code style check
-
-npm run type-check   # TypeScript type check
-
-npm run fix          # Auto-fix errors
+- npm run lint         # Code style check
+-
+- npm run type-check   # TypeScript type check
+-
+- npm run fix          # Auto-fix errors
 
 **Note**: replace `npm` with `yarn` in `package.json` if you use yarn.
