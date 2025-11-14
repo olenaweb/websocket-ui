@@ -14,7 +14,9 @@ export function createWebSocketServer(httpServer: Server): WebSocketServer {
 
   wss.on("connection", (ws: WebSocket) => {
     const clientCount = wss.clients.size;
-    console.log(`*** New WebSocket connection established (Total clients: ${clientCount})`);
+    console.log(
+      `*** New WebSocket connection established (Total clients: ${clientCount})`
+    );
 
     ws.on("message", (message: string) => {
       try {
@@ -38,7 +40,9 @@ export function createWebSocketServer(httpServer: Server): WebSocketServer {
     });
     ws.on("close", (code, reason) => {
       const clientCount = wss.clients.size;
-      console.log(`*** WebSocket connection closed (Code: ${code}, Reason: ${reason || 'No reason'}, Remaining clients: ${clientCount})`);
+      console.log(
+        `*** WebSocket connection closed (Code: ${code}, Reason: ${reason || "No reason"}, Remaining clients: ${clientCount})`
+      );
 
       // Remove connection from database
       let disconnectedPlayer = null;
@@ -51,7 +55,9 @@ export function createWebSocketServer(httpServer: Server): WebSocketServer {
       }
 
       if (disconnectedPlayer) {
-        console.log(`*** Player "${disconnectedPlayer.name}" (ID: ${disconnectedPlayer.index}) disconnected`);
+        console.log(
+          `*** Player "${disconnectedPlayer.name}" (ID: ${disconnectedPlayer.index}) disconnected`
+        );
       }
     });
 
@@ -67,7 +73,9 @@ export function createWebSocketServer(httpServer: Server): WebSocketServer {
       }
 
       if (errorPlayer) {
-        console.error(`*** Error for player "${errorPlayer.name}" (ID: ${errorPlayer.index})`);
+        console.error(
+          `*** Error for player "${errorPlayer.name}" (ID: ${errorPlayer.index})`
+        );
       }
     });
   });

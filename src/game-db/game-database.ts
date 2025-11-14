@@ -16,6 +16,11 @@ export class GameDatabase {
 
     if (existingPlayer) {
       if (existingPlayer.password === password) {
+        // Проверяем, есть ли уже активное соединение
+        const existingConnection = this.getPlayerConnection(existingPlayer.index);
+        if (existingConnection) {
+          throw new Error(`Player "${name}" is already connected`);
+        }
         return existingPlayer;
       } else {
         throw new Error("Wrong password");

@@ -41,30 +41,38 @@ function gracefulShutdown(signal: string) {
       // WebSocket.OPEN
       if (client.readyState === 1) {
         activeClients++;
-        client.close(1000, 'Server shutdown');
+        client.close(1000, "Server shutdown");
       }
     });
 
     if (activeClients > 0) {
-      console.log(`*** ${activeClients} WebSocket client(s) successfully disconnected`);
+      console.log(
+        `*** ${activeClients} WebSocket client(s) successfully disconnected`
+      );
     } else {
       console.log("*** No active WebSocket clients to disconnect");
     }
 
     wss.close(() => {
       console.log("✅ WebSocket server closed");
-      console.log(`*** Server shutdown completed. ${activeClients} client(s) were gracefully disconnected.`);
+      console.log(
+        `*** Server shutdown completed. ${activeClients} client(s) were gracefully disconnected.`
+      );
 
       httpServer.close(() => {
         clearTimeout(shutdownTimeout);
-        console.log(`✅ Server HTTP closed on http://localhost:${HTTP_PORT}${EOL}`);
+        console.log(
+          `✅ Server HTTP closed on http://localhost:${HTTP_PORT}${EOL}`
+        );
         process.exit(0);
       });
     });
   } else {
     httpServer.close(() => {
       clearTimeout(shutdownTimeout);
-      console.log(`✅ Server HTTP closed on http://localhost:${HTTP_PORT}${EOL}`);
+      console.log(
+        `✅ Server HTTP closed on http://localhost:${HTTP_PORT}${EOL}`
+      );
       process.exit(0);
     });
   }
