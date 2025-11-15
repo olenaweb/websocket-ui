@@ -34,7 +34,7 @@ export function createWebSocketServer(httpServer: Server): WebSocketServer {
         }
 
         console.log(`🠈 inbound message: ${JSON.stringify(parsedMessage)}`);
-        handleMessage(ws, parsedMessage, db, wss);
+        handleMessage(ws, parsedMessage, db);
       } catch (error) {
         console.error("❌ Error parsing message:", error);
         sendError(ws, "Invalid message format");
@@ -88,8 +88,7 @@ export function createWebSocketServer(httpServer: Server): WebSocketServer {
 function handleMessage(
   ws: WebSocket,
   message: WSMessage,
-  db: GameDatabase,
-  wss: WebSocketServer
+  db: GameDatabase
 ): void {
   const { type, data } = message;
 
@@ -104,14 +103,13 @@ function handleMessage(
       handleAddUserToRoom(ws, data, db);
       break;
     case "add_ships":
-      // handleAddShips(ws, data, db, wss);
       handleAddShips(ws, data, db);
       break;
     case "attack":
-      handleAttack(ws, data, db, wss);
+      handleAttack(ws, data, db);
       break;
     case "randomAttack":
-      handleRandomAttack(ws, data, db, wss);
+      handleRandomAttack(ws, data, db);
       break;
     default:
       sendError(ws, `Unknown command: ${type}`);

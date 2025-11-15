@@ -1,8 +1,10 @@
-// import { WebSocket, WebSocketServer } from "ws";
 import { WebSocket } from "ws";
 import { GameDatabase } from "../game-db/game-database";
 import { sendMessage, sendError } from "../websocket_server/utils";
 import { AddShipsData, StartGameData, Ship } from "../types/types";
+
+// direction: true = vertical (increases along Y),
+// false = horizontal (increases along X)
 
 function isAddShipsData(data: unknown): data is AddShipsData {
   return (
@@ -17,7 +19,6 @@ function isAddShipsData(data: unknown): data is AddShipsData {
 }
 
 function validateShips(ships: Ship[]): { isValid: boolean; error?: string } {
-  // number of ships by type
   const shipCounts = { huge: 0, large: 0, medium: 0, small: 0 };
   const expectedCounts = { huge: 1, large: 2, medium: 3, small: 4 };
 
@@ -26,7 +27,6 @@ function validateShips(ships: Ship[]): { isValid: boolean; error?: string } {
       return { isValid: false, error: `Invalid ship type: ${ship.type}` };
     }
 
-    // ship length corresponds to type
     const expectedLength = { huge: 4, large: 3, medium: 2, small: 1 }[
       ship.type
     ];
@@ -51,7 +51,7 @@ function validateShips(ships: Ship[]): { isValid: boolean; error?: string } {
     }
   }
 
-  // Check ship positions and overlaps
+  // ship positions and overlaps
   const occupiedCells = new Set<string>();
   const shipCells = new Map<string, number>(); // cell -> ship index
 
@@ -59,7 +59,7 @@ function validateShips(ships: Ship[]): { isValid: boolean; error?: string } {
     const ship = ships[shipIndex];
     const { x, y } = ship.position;
 
-    // Check initial position is within bounds
+    // initial position is within bounds
     if (x < 0 || x >= 10 || y < 0 || y >= 10) {
       return {
         isValid: false,
@@ -67,8 +67,7 @@ function validateShips(ships: Ship[]): { isValid: boolean; error?: string } {
       };
     }
 
-    // Check that the ship fits on the board
-    // direction: true = вертикальный (растет по Y), false = горизонтальный (растет по X)
+    // the ship fits on the board
     const endX = ship.direction ? x : x + ship.length - 1;
     const endY = ship.direction ? y + ship.length - 1 : y;
 
@@ -79,17 +78,16 @@ function validateShips(ships: Ship[]): { isValid: boolean; error?: string } {
       };
     }
 
-    // Check each cell of the current ship
+    // each cell of the current ship
     const currentShipCells: string[] = [];
     for (let i = 0; i < ship.length; i++) {
-      // direction: true = вертикальный (растет по Y), false = горизонтальный (растет по X)
       const cellX = ship.direction ? x : x + i;
       const cellY = ship.direction ? y + i : y;
       const cellKey = `${cellX},${cellY}`;
 
       currentShipCells.push(cellKey);
 
-      // Check for overlaps with other ships
+      // overlaps with other ships
       if (occupiedCells.has(cellKey)) {
         const overlappingShipIndex = shipCells.get(cellKey);
         return {
@@ -102,11 +100,11 @@ function validateShips(ships: Ship[]): { isValid: boolean; error?: string } {
       shipCells.set(cellKey, shipIndex);
     }
 
-    // Check distance between ships (no touching, including diagonals)
+    // distance between ships (no touching, including diagonals)
     for (const cellKey of currentShipCells) {
       const [cellX, cellY] = cellKey.split(",").map(Number);
 
-      // Check all 8 surrounding cells
+      // all 8 surrounding cells
       for (let dx = -1; dx <= 1; dx++) {
         for (let dy = -1; dy <= 1; dy++) {
           if (dx === 0 && dy === 0) continue; // Skip the ship cell itself
@@ -147,7 +145,6 @@ function validateShips(ships: Ship[]): { isValid: boolean; error?: string } {
 }
 
 function placeShipsOnBoard(ships: Ship[]): string[][] {
-  //  Create an empty 10x10 board
   const board = Array(10)
     .fill(null)
     .map(() => Array(10).fill("empty"));
@@ -157,11 +154,9 @@ function placeShipsOnBoard(ships: Ship[]): string[][] {
     const { x, y } = ship.position;
 
     for (let i = 0; i < ship.length; i++) {
-      // direction: true = vertical (increases along Y), false = horizontal (increases along X)
       const cellX = ship.direction ? x : x + i;
       const cellY = ship.direction ? y + i : y;
 
-      // Double-check bounds (should already be validated)
       if (cellX >= 0 && cellX < 10 && cellY >= 0 && cellY < 10) {
         board[cellY][cellX] = "ship";
       }
@@ -175,7 +170,6 @@ export function handleAddShips(
   ws: WebSocket,
   data: unknown,
   db: GameDatabase
-  // wss: WebSocketServer
 ): void {
   try {
     if (!isAddShipsData(data)) {
@@ -211,7 +205,6 @@ export function handleAddShips(
       return;
     }
 
-    // the player has not placed ships yet
     if (gamePlayer.ships.length > 0) {
       sendError(ws, "Ships already placed for this player");
       return;
@@ -222,7 +215,6 @@ export function handleAddShips(
       `🔍 Player "${player.name}" (ID: ${player.index}) sent ships for validation:`
     );
     ships.forEach((ship, index) => {
-      // direction: true = vertical (increases along Y), false = horizontal (increases along X)
       const endX = ship.direction
         ? ship.position.x
         : ship.position.x + ship.length - 1;
@@ -259,7 +251,6 @@ export function handleAddShips(
         `✅ Game ${gameId} is ready to start - both players placed ships`
       );
 
-      // Mark the game as started
       game.isStarted = true;
 
       // Send start_game to each player (with their ships)

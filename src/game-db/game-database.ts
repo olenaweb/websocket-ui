@@ -1,6 +1,5 @@
 import { WebSocket } from "ws";
 import { Player, Room, GameState } from "../types/types";
-// import{GamePlayer}from"../types/types";
 export class GameDatabase {
   private players: Map<string, Player> = new Map();
   private rooms: Map<number, Room> = new Map();
@@ -16,7 +15,6 @@ export class GameDatabase {
 
     if (existingPlayer) {
       if (existingPlayer.password === password) {
-        // Проверяем, есть ли уже активное соединение
         const existingConnection = this.getPlayerConnection(
           existingPlayer.index
         );
@@ -140,7 +138,6 @@ export class GameDatabase {
     return Array.from(this.playerConnections.values());
   }
 
-  // Helper method to find player by WebSocket
   findPlayerByWebSocket(ws: WebSocket): Player | undefined {
     for (const [playerId, connection] of this.playerConnections) {
       if (connection === ws) {
