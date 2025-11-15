@@ -2,7 +2,7 @@ import { WebSocketServer, WebSocket } from "ws";
 import { Server } from "http";
 import { GameDatabase } from "../game-db/game-database";
 import { WSMessage } from "../types/types";
-import { sendError } from "./utils";
+import { sendError, getErrorMessage } from "./utils";
 import { handleRegistration } from "../game-handlers/registration";
 import { handleCreateRoom, handleAddUserToRoom } from "../game-handlers/rooms";
 import { handleAddShips } from "../game-handlers/ships";
@@ -27,7 +27,9 @@ export function createWebSocketServer(httpServer: Server): WebSocketServer {
           try {
             parsedMessage.data = JSON.parse(parsedMessage.data);
           } catch (e) {
-            console.warn("⚠️ Data is not a JSON string, leaving as is" + e);
+            console.warn(
+              " New Room . No data available. " + getErrorMessage(e)
+            );
           }
         }
 
@@ -102,7 +104,8 @@ function handleMessage(
       handleAddUserToRoom(ws, data, db);
       break;
     case "add_ships":
-      handleAddShips(ws, data, db, wss);
+      // handleAddShips(ws, data, db, wss);
+      handleAddShips(ws, data, db);
       break;
     case "attack":
       handleAttack(ws, data, db, wss);

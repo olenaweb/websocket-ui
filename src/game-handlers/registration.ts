@@ -57,7 +57,8 @@ export function handleRegistration(
     broadcastWinnersUpdate(db);
   } catch (error) {
     const playerName = isRegistrationData(data) ? data.name : "unknown";
-    const errorMessage = error instanceof Error ? error.message : "Registration failed";
+    const errorMessage =
+      error instanceof Error ? error.message : "Registration failed";
 
     const responseData: RegistrationResponse = {
       name: playerName,

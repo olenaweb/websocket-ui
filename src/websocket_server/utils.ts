@@ -2,6 +2,11 @@ import { WebSocket } from "ws";
 import { GameDatabase } from "../game-db/game-database";
 import { WSResponse, RoomData, WinnerData } from "../types/types";
 
+export function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  return String(error);
+}
+
 export function sendMessage<T = unknown>(
   ws: WebSocket,
   message: WSResponse<T>
