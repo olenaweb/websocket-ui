@@ -1,6 +1,10 @@
 import { WebSocket } from "ws";
 import { GameDatabase } from "../game-db/game-database";
-import { sendMessage, sendError } from "../websocket_server/utils";
+import {
+  sendMessage,
+  sendError,
+  broadcastWinnersUpdate,
+} from "../websocket_server/utils";
 import {
   AttackData,
   RandomAttackData,
@@ -10,6 +14,7 @@ import {
   GamePlayer,
   GameState,
 } from "../types/types";
+import { makeBotMove } from "./single-play";
 
 function isAttackData(data: unknown): data is AttackData {
   return (
@@ -293,6 +298,9 @@ function broadcastGameEnd(
     console.log(
       `✅ Player "${winner.name}" won the game! Total wins: ${winner.wins}`
     );
+
+    // Update the winners table for all clients
+    broadcastWinnersUpdate(db);
   }
 }
 
@@ -380,7 +388,14 @@ export function handleAttack(
       if (result.status === "miss") {
         switchTurn(game);
       }
+
       broadcastTurn(game, db);
+
+      // If it's the bot's turn, launch his attack
+      const hasBot = game.players.some((p) => p.index === -1);
+      if (hasBot && game.currentPlayerIndex === -1) {
+        makeBotMove(game.gameId, db);
+      }
     } catch (attackError) {
       if (attackError instanceof Error) {
         sendError(ws, attackError.message);

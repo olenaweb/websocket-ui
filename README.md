@@ -1,48 +1,85 @@
-# RSSchool NodeJS websocket task
-> Static http server and base task packages. 
-> By default WebSocket client tries to connect to the 3000 port.
+# Battleship WebSocket Game
 
-## Installation
-`git clone https://github.com/olenaweb/websocket-ui.git`
+> A multiplayer battleship game built with TypeScript, WebSocket, and Node.js. Features both multiplayer and single-player (vs bot) modes with real-time gameplay and winner leaderboard.
 
-`git checkout -b develop origin/develop`
+##  Game Features
 
-`npm install`
+- **Multiplayer Mode**: Play against other players in real-time
+- **Single-player Mode**: Challenge an AI bot opponent
+- **Real-time Communication**: WebSocket-based live gameplay
+- **Ship Placement Validation**: Comprehensive rule checking
+- **Winner Leaderboard**: Track victories across sessions
+- **Room Management**: Create and join game rooms
+- **TypeScript**: Full type safety with strict typing
 
+##  Quick Start
 
-## Usage
-1.**Development**
+### Installation
 
-running TypeScript files directly from sources using tsx:
-`npm run start:dev` -> `npx tsx ./index.ts`
+```bash
+git clone https://github.com/olenaweb/websocket-ui.git
+cd websocket-ui
+git checkout -b develop origin/develop
+npm install
+```
 
-launch with automatic reboot when files change:
-`npm run start:watch` -> `"nodemon --exec \"npx tsx ./index.ts\""`
+### Development Mode
 
-* App served @ `http://localhost:3000` with nodemon
+```bash
+npm run start:dev
+```
+- Runs TypeScript files directly using `tsx`
+- Server available at `http://localhost:3000`
+- WebSocket server on `ws://localhost:3000`
 
-2.**Production**
+### Development with Auto-reload
 
-`npm run start` -> `"start": "webpack --config webpack.config.cjs && node ./dist/index.cjs"`
+```bash
+npm run start:watch
+```
+- Automatically restarts on file changes using `nodemon`
+- Perfect for development workflow
 
-* App served @ `http://localhost:3000` without nodemon
+### Production Mode
+
+```bash
+npm run start
+```
+- Builds with webpack and runs optimized bundle
+- Uses production configuration
+
+## 📋 Available Commands
+
+| Command | Description | Environment |
+|---------|-------------|-------------|
+| `npm run start:dev` | Direct TypeScript execution | Development |
+| `npm run start:watch` | Auto-reload development server | Development |
+| `npm run start` | Production build and run | Production |
+| `npm run lint` | ESLint code style check | Any |
+| `npm run type-check` | TypeScript type validation | Any |
+| `npm run fix` | Auto-fix linting errors | Any |
+
+##  Game Rules
+
+- **Ship Types**: 1 huge (4 cells), 2 large (3 cells), 3 medium (2 cells), 4 small (1 cell)
+- **Placement**: Ships cannot touch each other (including diagonally)
+- **Turns**: Continue shooting on hit, switch turns on miss
+- **Victory**: First player to sink all opponent ships wins
+
+##  Architecture
+
+- **Backend**: Node.js + TypeScript + WebSocket (`ws` library)
+- **Frontend**: Static HTML/CSS/JS served by HTTP server
+- **Database**: In-memory storage with persistent player sessions
+- **Build**: Webpack for production bundling
+
+##  Development Notes
+
+- **ES Modules**: Full ESM support with TypeScript 5.9.3
+- **Strict Typing**: No `any` types allowed
+- **Bot single-player mode**: Automated opponent for single-player mode
+- **Real-time Updates**: Live leaderboard and game state synchronization
 
 ---
 
-3.**All commands**
-
-Command | Description
---- | ---
-`npm run start:dev` | App served @ `http://localhost:3000` without nodemon
-`npm run start:watch` | App served @ `http://localhost:3000` with nodemon
-`npm run start` | App served @ `http://localhost:3000` without nodemon in Production
-
-
-#### Code Checks
-- npm run lint         # Code style check
--
-- npm run type-check   # TypeScript type check
--
-- npm run fix          # Auto-fix errors
-
-**Note**: replace `npm` with `yarn` in `package.json` if you use yarn.
+**Note**: You can replace `npm` with `yarn` if preferred.

@@ -127,6 +127,8 @@ export class GameDatabase {
   }
 
   getPlayerConnection(playerId: number): WebSocket | undefined {
+    // Bot doesn't have a real connection
+    if (playerId === -1) return undefined;
     return this.playerConnections.get(playerId);
   }
 
@@ -139,6 +141,17 @@ export class GameDatabase {
   }
 
   findPlayerByWebSocket(ws: WebSocket): Player | undefined {
+    // Special handling for bot
+    if ((ws as unknown as { isBot?: boolean }).isBot === true) {
+      // This is a bot stub, return virtual bot player
+      return {
+        name: "Bot",
+        password: "",
+        index: -1,
+        wins: 0,
+      };
+    }
+
     for (const [playerId, connection] of this.playerConnections) {
       if (connection === ws) {
         return this.getPlayerById(playerId);

@@ -6,6 +6,25 @@ import { AddShipsData, StartGameData, Ship } from "../types/types";
 // direction: true = vertical (increases along Y),
 // false = horizontal (increases along X)
 
+export function logShipsPlacement(
+  ships: Ship[],
+  playerName: string,
+  playerId: number
+): void {
+  console.log(`🔍 ${playerName} (ID: ${playerId}) ships placement:`);
+  ships.forEach((ship, index) => {
+    const endX = ship.direction
+      ? ship.position.x
+      : ship.position.x + ship.length - 1;
+    const endY = ship.direction
+      ? ship.position.y + ship.length - 1
+      : ship.position.y;
+    console.log(
+      `  Ship ${index + 1}: ${ship.type} (length: ${ship.length}), position: (${ship.position.x}, ${ship.position.y}), direction: ${ship.direction ? "vertical" : "horizontal"}, end: (${endX}, ${endY})`
+    );
+  });
+}
+
 function isAddShipsData(data: unknown): data is AddShipsData {
   return (
     typeof data === "object" &&
@@ -211,20 +230,7 @@ export function handleAddShips(
     }
 
     // Detailed logging of received ships for debugging
-    console.log(
-      `🔍 Player "${player.name}" (ID: ${player.index}) sent ships for validation:`
-    );
-    ships.forEach((ship, index) => {
-      const endX = ship.direction
-        ? ship.position.x
-        : ship.position.x + ship.length - 1;
-      const endY = ship.direction
-        ? ship.position.y + ship.length - 1
-        : ship.position.y;
-      console.log(
-        `  Ship ${index + 1}: ${ship.type} (length: ${ship.length}), position: (${ship.position.x}, ${ship.position.y}), direction: ${ship.direction ? "vertical" : "horizontal"}, end: (${endX}, ${endY})`
-      );
-    });
+    logShipsPlacement(ships, `Player "${player.name}"`, player.index);
 
     const validation = validateShips(ships);
     if (!validation.isValid) {
@@ -246,12 +252,28 @@ export function handleAddShips(
     // Check if both players have placed ships
     const allPlayersReady = game.players.every((p) => p.ships.length > 0);
 
+    console.log(`🔍 Players readiness check:`);
+    game.players.forEach((p) => {
+      console.log(`  Player ${p.index}: ${p.ships.length} ships placed`);
+    });
+    console.log(`  All players ready: ${allPlayersReady}`);
+
     if (allPlayersReady) {
       console.log(
         `✅ Game ${gameId} is ready to start - both players placed ships`
       );
 
+      // Mark the game as started
       game.isStarted = true;
+
+      // In single-play mode, the human player always goes first
+      const hasBot = game.players.some((p) => p.index === -1);
+      if (hasBot) {
+        const humanPlayer = game.players.find((p) => p.index !== -1);
+        if (humanPlayer) {
+          game.currentPlayerIndex = humanPlayer.index;
+        }
+      }
 
       // Send start_game to each player (with their ships)
       for (const gamePlayer of game.players) {
@@ -269,6 +291,22 @@ export function handleAddShips(
           });
 
           console.log(`*** Sent start_game to player ${gamePlayer.index}`);
+        }
+      }
+
+      // Send turn message
+      const turnData = {
+        currentPlayer: game.currentPlayerIndex,
+      };
+
+      for (const gamePlayer of game.players) {
+        const playerWs = db.getPlayerConnection(gamePlayer.index);
+        if (playerWs) {
+          sendMessage(playerWs, {
+            type: "turn",
+            data: turnData,
+            id: 0,
+          });
         }
       }
 

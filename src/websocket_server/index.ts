@@ -7,6 +7,7 @@ import { handleRegistration } from "../game-handlers/registration";
 import { handleCreateRoom, handleAddUserToRoom } from "../game-handlers/rooms";
 import { handleAddShips } from "../game-handlers/ships";
 import { handleAttack, handleRandomAttack } from "../game-handlers/attacks";
+import { handleSinglePlay } from "../game-handlers/single-play";
 
 export function createWebSocketServer(httpServer: Server): WebSocketServer {
   const wss = new WebSocketServer({ server: httpServer });
@@ -110,6 +111,9 @@ function handleMessage(
       break;
     case "randomAttack":
       handleRandomAttack(ws, data, db);
+      break;
+    case "single_play":
+      handleSinglePlay(ws, data, db);
       break;
     default:
       sendError(ws, `Unknown command: ${type}`);
