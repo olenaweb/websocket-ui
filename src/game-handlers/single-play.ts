@@ -263,11 +263,11 @@ async function simulateBotAttack(
 
   // stub WebSocket for the bot
   const botWs = {
-    send: () => { },
+    send: () => {},
     readyState: 1,
-    close: () => { },
-    addEventListener: () => { },
-    removeEventListener: () => { },
+    close: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
     isBot: true,
   } as unknown as WebSocket;
 

@@ -5,7 +5,7 @@
 ##  Game Features
 
 - **Multiplayer Mode**: Play against other players in real-time
-- **Single-player Mode**: Challenge an AI bot opponent
+- **Single-player Mode**: Challenge an bot opponent
 - **Real-time Communication**: WebSocket-based live gameplay
 - **Ship Placement Validation**: Comprehensive rule checking
 - **Winner Leaderboard**: Track victories across sessions
@@ -29,7 +29,7 @@ npm install
 npm run start:dev
 ```
 - Runs TypeScript files directly using `tsx`
-- Server available at `http://localhost:3000`
+- HTTP Server available at `http://localhost:3000`
 - WebSocket server on `ws://localhost:3000`
 
 ### Development with Auto-reload
@@ -38,7 +38,6 @@ npm run start:dev
 npm run start:watch
 ```
 - Automatically restarts on file changes using `nodemon`
-- Perfect for development workflow
 
 ### Production Mode
 
