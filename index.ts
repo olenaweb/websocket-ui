@@ -17,7 +17,6 @@ let wss: WebSocketServer | null = null;
 httpServer.listen(HTTP_PORT, () => {
   console.log(`*** HTTP server is running on http://localhost:${HTTP_PORT}`);
 
-  //  Start WebSocket server
   wss = createWebSocketServer(httpServer);
   console.log(
     `*** WebSocket server is running on ws://localhost:${HTTP_PORT}${EOL}`
@@ -27,18 +26,16 @@ httpServer.listen(HTTP_PORT, () => {
 function gracefulShutdown(signal: string) {
   console.log(`${EOL}🛑 Received ${signal}. Shutting down gracefully...`);
 
-  // Таймаут для принудительного завершения
   const shutdownTimeout = setTimeout(() => {
     console.log("⚠️ Force shutdown - timeout exceeded");
     process.exit(1);
-  }, 5000); // 5 секунд
+  }, 5000);
 
   if (wss) {
     console.log("*** Closing WebSocket server...");
 
     let activeClients = 0;
     wss.clients.forEach((client) => {
-      // WebSocket.OPEN
       if (client.readyState === 1) {
         activeClients++;
         client.close(1000, "Server shutdown");
