@@ -22,7 +22,7 @@ cd websocket-ui
 git checkout -b develop origin/develop
 npm install
 ```
-
+###### rename file .env.example to file .env
 ### Development Mode
 
 ```bash
